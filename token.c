@@ -30,7 +30,7 @@ struct token *tok_create(const char *val, const enum tok_type type)
 
 void tok_append(struct token **tokens, const char *val, const enum tok_type type)
 {
-    if(!(*tokens)) *tokens = tok_create(val, type);
+    if(!*tokens) *tokens = tok_create(val, type);
     else
     {
         struct token *tmp = *tokens;
