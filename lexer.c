@@ -24,6 +24,15 @@ void lexer_print(const struct lexer *lexer)
     }
 }
 
+/*void lex1(struct lexer *lexer)
+{
+    char ch;
+    for(int i = 0; i <= lexer->len; i++)
+    {
+
+    }
+}*/
+
 void lex(struct lexer *lexer)
 {
     char ch;
@@ -38,7 +47,7 @@ void lex(struct lexer *lexer)
                 {
                     lexer->state = STATE_SQ;
                 }
-                else if(isalnum(ch))
+                else if(isprint(ch))
                 {
                     lexer->tok_start = i;
 
@@ -56,7 +65,7 @@ void lex(struct lexer *lexer)
                 {
                     lexer->state = STATE_SQ;
                 }
-                else if(isalnum(ch))
+                else if(isprint(ch))
                 {
                     lexer->tok_start = i;
 
@@ -83,7 +92,7 @@ void lex(struct lexer *lexer)
             }
             case(STATE_SQ):
             {
-                if(isalnum(ch))
+                if(isprint(ch))
                 {
                     lexer->tok_start = i;
 
@@ -97,7 +106,12 @@ void lex(struct lexer *lexer)
             }
             case(STATE_SQ_WORD):
             {
-                if(ch == '\'')
+                if(ch == '\0')
+                {
+                    lexer->tok_end = i;
+                    tok_append(&lexer->tokens, tok_copy_val(lexer->val, lexer->tok_start, lexer->tok_end), TOKEN_SQ_WORD);
+                }
+                else if(ch == '\'')
                 {
                     lexer->tok_end = i;
                     tok_append(&lexer->tokens, tok_copy_val(lexer->val, lexer->tok_start, lexer->tok_end), TOKEN_SQ_WORD);
@@ -113,5 +127,5 @@ void lex(struct lexer *lexer)
         }
     }
     lexer->state = STATE_END;
-    tok_append(&lexer->tokens, "\0", TOKEN_EOF);
+    tok_append(&lexer->tokens, NULL, TOKEN_EOF);
 }
